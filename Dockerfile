@@ -1,4 +1,4 @@
-FROM dmitrymomot/docker-php-cli
+FROM dmitrymomot/php-cli
 
 MAINTAINER "Dmitry Momot" <mail@dmomot.com>
 
