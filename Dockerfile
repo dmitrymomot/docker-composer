@@ -1,29 +1,20 @@
-# Pull base image
 FROM dmitrymomot/php-cli
 
 MAINTAINER "Dmitry Momot" <mail@dmomot.com>
 
-# Set environment variables
-ENV COMPOSER_HOME /root/composer
-ENV PATH $COMPOSER_HOME/vendor/bin:$PATH
+WORKDIR /tmp
 
-# Install Composer
 RUN apt-get update -y && \
     apt-get install -y curl git php5-mcrypt php5-gd && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer --ansi --version && \
+    curl -sS https://getcomposer.org/installer | php && \
+    mv composer.phar /usr/local/bin/composer && \
+    composer self-update && \
     apt-get remove --purge curl -y && \
     apt-get clean
 
-# Memory Limit
-RUN PHP_INI_PATH=`php -i | grep 'Loaded Configuration File' | awk '{print $5}'` && \
-    sed -i "s|memory_limit =.*|memory_limit = -1|" PHP_INI_PATH
-
-# Define working directory
 RUN mkdir -p /data/www
-VOLUME ["/data/www"]
+VOLUME ["/data"]
 WORKDIR /data/www
 
-# Set up the command arguments
-ENTRYPOINT ["composer", "--ansi"]
+ENTRYPOINT ["composer"]
 CMD ["--help"]
