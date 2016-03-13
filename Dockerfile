@@ -1,5 +1,5 @@
 # Pull base image
-FROM dmitrymomot/docker-php-cli
+FROM dmitrymomot/php-cli
 
 MAINTAINER "Dmitry Momot" <mail@dmomot.com>
 
@@ -14,7 +14,7 @@ RUN apt-get update -y && \
     composer --ansi --version && \
     apt-get remove --purge curl -y && \
     apt-get clean
-    
+
 # Memory Limit
 RUN PHP_INI_PATH=`php -i | grep 'Loaded Configuration File' | awk '{print $5}'` && \
     sed -i "s|memory_limit =.*|memory_limit = -1|" PHP_INI_PATH
@@ -25,5 +25,5 @@ VOLUME ["/data/www"]
 WORKDIR /data/www
 
 # Set up the command arguments
-CMD ["--help"]
 ENTRYPOINT ["composer", "--ansi"]
+CMD ["--help"]
